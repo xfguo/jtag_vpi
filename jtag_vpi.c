@@ -209,9 +209,10 @@ void send_result_to_server(char *userdata)
 
 	// check we got passed a memory (array of regs)
 	if (!((vpi_get(vpiType, argh) == vpiMemory)
-#ifdef MODELSIM_VPI
+// TODO: how to define a MACRO `VCS_VPI` when compile with vcs
+//#if defined(MODELSIM_VPI) || defined(VCS_VPI)
 	|| (vpi_get(vpiType, argh) == vpiRegArray)
-#endif
+//#endif
 	)) {
 		vpi_printf("jp_vpi: ERROR: did not pass a memory to get_command_block_data\n");
 		vpi_printf("jp_vpi: ERROR: was passed type %d\n", (int)vpi_get(vpiType, argh));
@@ -365,14 +366,14 @@ void setup_finish_callbacks()
 	// actual call to register the callback
 	vpi_register_cb(&cb_data_s);
 }
-
 // Register the new system task here
 void (*vlog_startup_routines[])() = {
-#ifdef CDS_VPI
+// TODO: how to define a MACRO `VCS_VPI` when compile with vcs
+//#ifdef CDS_VPI
 	// this installs a callback on simulator reset - something which
 	// icarus does not do, so we only do it for cadence currently
 	setup_reset_callbacks,
-#endif
+//#endif
 	setup_endofcompile_callbacks,
 	setup_finish_callbacks,
 	register_check_for_command,
@@ -380,8 +381,11 @@ void (*vlog_startup_routines[])() = {
 	0  // last entry must be 0
 };
 
+// TODO: how to define a MACRO `VCS_VPI` when compile with vcs
+#if 0
 // Entry point for testing development of the vpi functions
 int main(int argc, char *argv[])
 {
 	return 0;
 }
+#endif
